@@ -6,7 +6,7 @@ let highScore = 0;
 const getSectrtNumber = function () {
   return Math.trunc(Math.random() * 20 + 1);
 };
-const sectrtNumber = getSectrtNumber();
+let sectrtNumber = getSectrtNumber();
 document.querySelector('.score').textContent = score;
 console.log(sectrtNumber);
 
