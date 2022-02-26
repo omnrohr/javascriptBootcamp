@@ -1,0 +1,10 @@
+{
+    "configurations": [
+        {
+            "type": "pwa-msedge",
+            "name": "index.html",
+            "request": "launch",
+            "url": "file:///D:/java%20script/starter/02/starter/index.html"
+        }
+    ]
+}
