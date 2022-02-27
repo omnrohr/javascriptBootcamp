@@ -5,6 +5,7 @@ const diceImage = document.querySelector('.dice');
 const player0Screen = document.querySelector('.player--0');
 const player1Screen = document.querySelector('.player--1');
 const holdBtn = document.querySelector('.btn--hold');
+const newGameBtn = document.querySelector('.btn--new');
 
 //initilize currnt dice.
 let currentDice;
@@ -25,17 +26,34 @@ const switchPlayer = function () {
 };
 
 //game variables
-const score = [0, 0];
-let currentScore = 0;
-// let activePlayer = player0Screen.classList.contains('player--active') ? 0 : 1;
-let currentPlayer = 0; //it will start from player 0 sure.
-// let playerNames = [
-//   prompt('Sirst player name? '),
-//   prompt('Second player name? '),
-// ];
-
+let score;
+let currentScore;
+let currentPlayer; //it will start from player 0 sure.
 let playerNames = ['player 1', 'player 2'];
-let playing = true;
+let playing;
+
+const initilize = function () {
+  currentScore = 0;
+  score = [0, 0];
+  playing = true;
+  currentDice = 0;
+  currentPlayer = 0;
+
+  document.getElementById(`name--${currentPlayer}`).textContent =
+    playerNames[currentPlayer];
+  document.getElementById('current--0').textContent = 0;
+  document.getElementById('current--1').textContent = 0;
+  document.getElementById('score--0').textContent = 0;
+  document.getElementById('score--1').textContent = 0;
+
+  player0Screen.classList.remove('player--winner');
+  player1Screen.classList.remove('player--winner');
+  diceImage.classList.add('hidden');
+  player0Screen.classList.add('player--active');
+  player1Screen.classList.remove('player--active');
+};
+
+initilize();
 
 document.getElementById('name--0').textContent =
   playerNames[0].toLocaleUpperCase();
@@ -98,3 +116,5 @@ holdBtn.addEventListener('click', function () {
     }
   }
 });
+
+newGameBtn.addEventListener('click', initilize);
