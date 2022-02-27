@@ -162,6 +162,7 @@ main {
 }
 
 .player--winner .name {
+  text-align: center;
   font-weight: 700;
   color: #c7365f;
 }
