@@ -96,6 +96,8 @@ const abObj = { a, b };
 ({ a, b } = item); //mutating varaibles.
 console.log(a, b, abObj);
 */
+
+/*
 const { openingHours } = restaurant;
 const { fri } = openingHours;
 console.log(fri, { openingHours });
@@ -107,3 +109,13 @@ restaurant.orderDelivery({
   mainIndex: 2,
   starterIndex: 2,
 });
+
+for (const key of Object.keys(restaurant.openingHours)) {
+  console.log(key);
+}
+*/
+
+for (const [key, { open, close }] of Object.entries(restaurant.openingHours)) {
+  console.log(`you are welcome at ${key}, open at ${open} closing at ${close}`);
+  // console.log(`you are welcome at ${key} : ${Object.entries(values)}`);
+}

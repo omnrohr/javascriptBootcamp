@@ -83,3 +83,5 @@ console.log(team11, drwa1, team22);
 
 team1 < team2 && console.log('team 1 is more likely to win');
 team1 > team2 && console.log('team 2 is more likely to win');
+const days = Object.keys(game.odds);
+console.log(days);
