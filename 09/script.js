@@ -236,7 +236,9 @@ announcement = announcement.replace(/door/g, 'gate');
 console.log(announcement);
 
 const maskCredidCard = function (number) {
-  let str = number + '';
+  const str = number + '';
+  //or
+  // const str = String(number);
   console.log(str.slice(-4).padStart(str.length, '*'));
 };
 
