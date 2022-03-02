@@ -181,29 +181,63 @@ resMap
 // };
 // console.log(f(1, 0));
 
-const rest = new Map();
-rest
-  .set('name', 'my resturant')
-  .set('open', 12)
-  .set('close', 23)
-  .set(true, 'you are welcome')
-  .set(false, 'Sorry we closed');
+// const rest = new Map();
+// rest
+//   .set('name', 'my resturant')
+//   .set('open', 12)
+//   .set('close', 23)
+//   .set(true, 'you are welcome')
+//   .set(false, 'Sorry we closed');
 
-console.log(rest);
+// console.log(rest);
 
-const welcome = function (hour) {
-  return hour > rest.get('open') && hour < rest.get('close');
+// const welcome = function (hour) {
+//   return hour > rest.get('open') && hour < rest.get('close');
+// };
+// console.log(rest.get(welcome(15)));
+
+// let reserve = 2;
+// console.log(
+//   rest.get(reserve > rest.get('open') && reserve < rest.get('close'))
+// );
+
+// const obj = {
+//   item1: 'the item number 1',
+//   item2: 'the item number 2',
+// };
+// console.log(obj);
+// console.log(obj.toString());
+
+const airline = 'Tap air Jordan';
+const plane = 'B120';
+
+console.log(plane[0], 'B720'[0]);
+
+console.log(airline.indexOf('r').toString());
+console.log(airline.includes('r'));
+console.log(airline.lastIndexOf('r'));
+console.log(airline.slice(4).toUpperCase().split(' ').entries());
+
+const passengerNmae = 'PlALI';
+const fxPassengerName =
+  passengerNmae.toUpperCase()[0] + passengerNmae.slice(1).toLowerCase();
+console.log(fxPassengerName);
+
+let price = 'JD259,30';
+let convertedUsPrice =
+  '$' + Math.round(Number(price.slice(0, -2).replace(',', '.')) / 0.71);
+console.log(price, convertedUsPrice);
+// const UsPrice = price.replace(',', '.').replace('JD', '$');
+// console.log(UsPrice);
+
+let announcement =
+  'All Passengers go to door 20, please all passengers go to door 20';
+announcement = announcement.replace(/door/g, 'gate');
+console.log(announcement);
+
+const maskCredidCard = function (number) {
+  let str = number + '';
+  console.log(str.slice(-4).padStart(str.length, '*'));
 };
-console.log(rest.get(welcome(15)));
 
-let reserve = 2;
-console.log(
-  rest.get(reserve > rest.get('open') && reserve < rest.get('close'))
-);
-
-const obj = {
-  item1: 'the item number 1',
-  item2: 'the item number 2',
-};
-console.log(obj);
-console.log(obj.toString());
+maskCredidCard(1234567890121314);
