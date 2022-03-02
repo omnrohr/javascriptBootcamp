@@ -115,7 +115,95 @@ for (const key of Object.keys(restaurant.openingHours)) {
 }
 */
 
-for (const [key, { open, close }] of Object.entries(restaurant.openingHours)) {
-  console.log(`you are welcome at ${key}, open at ${open} closing at ${close}`);
-  // console.log(`you are welcome at ${key} : ${Object.entries(values)}`);
-}
+// for (const [key, { open, close }] of Object.entries(restaurant.openingHours)) {
+//   console.log(`you are welcome at ${key}, open at ${open} closing at ${close}`);
+//   // console.log(`you are welcome at ${key} : ${Object.entries(values)}`);
+// }
+
+/*
+const newName = 'new Name';
+const resMap = new Map();
+resMap
+  .set('resName', 'Classico Italiano')
+  .set('rlocation', 'Via Angelo Tavanti 23, Firenze, Italy')
+  .set('rcategories', ['Italian', 'Pizzeria', 'Vegetarian', 'Organic'])
+  .set('rstarterMenu', [
+    'Focaccia',
+    'Bruschetta',
+    'Garlic Bread',
+    'Caprese Salad',
+  ])
+  .set('rmainMenu', ['Pizza', 'Pasta', 'Risotto'])
+  .set('rorder', function (starterMenuIndex, mainMenuIndex) {
+    return [this.starterMenu[starterMenuIndex], this.mainMenu[mainMenuIndex]];
+  })
+  .set('ropeningHours', {
+    thu: {
+      open: 12,
+      close: 22,
+    },
+    fri: {
+      open: 11,
+      close: 23,
+    },
+    sat: {
+      open: 0, // Open 24 hours
+      close: 24,
+    },
+  });
+
+*/
+
+///////////////////////////////////////
+// Maps: Iteration
+// const question = new Map([
+//   ['question', 'What is the best programming language in the world?'],
+//   [1, 'C'],
+//   [2, 'Java'],
+//   [3, 'JavaScript'],
+//   ['correct', 3],
+//   [true, 'Correct 🎉'],
+//   [false, 'Try again!'],
+// ]);
+// console.log(question);
+
+// const array = new Map([
+//   ['key1', 'value1'],
+//   ['key2', 'value2'],
+// ]);
+// console.log(Array.prototype);
+
+// const friends = ['shadi', 'hazem', 'rana'];
+// console.log(friends);
+
+// let f = function (a, b) {
+//   return a && b;
+// };
+// console.log(f(1, 0));
+
+const rest = new Map();
+rest
+  .set('name', 'my resturant')
+  .set('open', 12)
+  .set('close', 23)
+  .set(true, 'you are welcome')
+  .set(false, 'Sorry we closed');
+
+console.log(rest);
+
+const welcome = function (hour) {
+  return hour > rest.get('open') && hour < rest.get('close');
+};
+console.log(rest.get(welcome(15)));
+
+let reserve = 2;
+console.log(
+  rest.get(reserve > rest.get('open') && reserve < rest.get('close'))
+);
+
+const obj = {
+  item1: 'the item number 1',
+  item2: 'the item number 2',
+};
+console.log(obj);
+console.log(obj.toString());
