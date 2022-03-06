@@ -198,3 +198,97 @@ const firstLastName = function (first) {
 
 const composeFirstLast = firstLastName('obada');
 console.log(composeFirstLast('alahdab'));
+
+const closures = function () {
+  let counter = 0;
+  return function insider() {
+    counter++;
+    console.log('counter: ', counter);
+  };
+};
+
+const closuresfunc = closures();
+closuresfunc();
+closuresfunc();
+closuresfunc();
+
+const firstFunc = function () {
+  let a = 1;
+  let b = 2;
+  return secondFunc(a, b);
+};
+
+const secondFunc = function (x, y) {
+  let c = 3;
+  return c + x * y;
+};
+
+const thirdFunc = function () {
+  return 3;
+};
+
+const fourthFunc = () => 2;
+
+let z = firstFunc();
+
+const fifthFunc = function () {
+  const a = 0;
+
+  const fifthinnerFunc = function (a) {
+    return a + 1;
+  };
+  return fifthinnerFunc;
+};
+
+const fifthVariable = fifthFunc();
+
+((a, b) => console.log(a + b))(1, 2);
+{
+  console.log('tyo of expression', typeof ((a, b) => console.log(a + b))(1, 2));
+}
+let b;
+const a = {
+  m: () => console.log('mmmmmm'),
+  x: function (a, b) {
+    return a * b;
+  },
+  c: true,
+  blockOfCode: 'block one',
+  blocktow: 12,
+  nonblock: true,
+  aFunc: (a, b) => a + b,
+};
+console.log('a object: ', a);
+const myMap = new Map([
+  ['mapa', 1],
+  ['b', true],
+  [
+    'c',
+    {
+      fName: 'obada',
+      lName: 'alahdab',
+    },
+  ],
+  [1 === 1 ? 'a' : 'f', 'one equal one'],
+]);
+myMap.set(true, 'any value').set('new value', 123);
+console.log('my map', myMap);
+
+// const question = new Map([
+//   ['question', 'What is the best programming language in the world?'],
+//   [1, 'C'],
+//   [2, 'Java'],
+//   [3, 'JavaScript'],
+//   ['correct', 3],
+//   [true, 'Correct 🎉'],
+//   [false, 'Try again!'],
+// ]);
+// console.log(question);
+
+for (let i = 1; i < 2; i++) {
+  console.log('inside i: ', i);
+}
+
+for (const i of myMap.entries()) {
+  console.log('my map entries: ', i);
+}
