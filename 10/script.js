@@ -345,6 +345,7 @@ BONUS TEST DATA 2: [1, 5, 3, 9, 6, 1]
 GOOD LUCK 😀
 */
 
+/*
 const poll = {
   question: 'What is your favourite programming language?',
   options: ['0: JavaScript', '1: Python', '2: Rust', '3: C++'],
@@ -374,3 +375,76 @@ document
   .addEventListener('click', poll.registerNewAnswer.bind(poll));
 
 poll.displayResults.call({ answers: [1, 4, 5, 6, 7, 8, 8] }, 'string');
+
+(function (a, b) {
+  console.log(a * b);
+})(10, 3);
+
+const runoce = (a, b) => console.log(a ** b);
+runoce(5, 10);
+
+const closuers = function (a) {
+  a = 0;
+  return b => a++ * b;
+};
+
+const closuresFunc = closuers();
+console.log(closuresFunc(2));
+console.log(closuresFunc(3));
+console.log(closuresFunc(4));
+
+((a, c) => console.log(a, c))('hello', 'onetime function');
+
+console.log('null' || null || undefined || 1);
+console.log('null' && 2 && undefined && 1);
+
+let f = 1;
+const g = function () {
+  const a = 23;
+  return (f = function () {
+    console.log(a * 2);
+  });
+};
+
+g()();
+f();
+console.dir(f);
+const boardPassengers = function (n, wait) {
+  const perGroup = n / 3;
+  setTimeout(function () {
+    console.log(`We are now boarding all ${n} passengers`);
+    console.log(`There are 3 groups, each with ${perGroup} passengers`);
+  }, wait * 1000);
+  console.log(`Will start boarding in ${wait} seconds`);
+};
+const perGroup = 1000;
+boardPassengers(180, 3);
+
+*/
+
+///////////////////////////////////////
+// Coding Challenge #2
+
+/* 
+This is more of a thinking challenge than a coding 
+challenge 🤓
+Take the IIFE below and at the end of the function, 
+attach an event listener that changes the color of the
+ selected h1 element ('header') to blue, each time the
+  BODY element is clicked. Do NOT select the h1 element
+   again!
+And now explain to YOURSELF (or someone around you)
+ WHY this worked! Take all the time you need.
+  Think about WHEN exactly the callback function is
+   executed, and what that means for the variables involved
+    in this example.
+GOOD LUCK 😀
+*/
+const header = document.querySelector('h1');
+
+(function () {
+  header.style.color = 'blue';
+  document.querySelector('body').addEventListener('click', function () {
+    header.style.color = 'red';
+  });
+})();
