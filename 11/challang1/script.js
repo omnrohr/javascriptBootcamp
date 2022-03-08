@@ -36,3 +36,35 @@ TEST DATA 2: Julia's data
 
 GOOD LUCK 😀
 */
+const dogsJulia = [
+  [3, 5, 2, 12, 7],
+  [9, 16, 6, 8, 3],
+];
+const dogsKate = [
+  [4, 1, 15, 8, 3],
+  [10, 5, 6, 1, 4],
+];
+const checkDogs = function (dogsJulia, dogsKate) {
+  const allDogsAges = [...dogsJulia.slice(1, -2), ...dogsKate];
+  allDogsAges.forEach(function (dogAge, index) {
+    // "Dog number 2 is still a puppy 🐶"
+    console.log(
+      `Dog number ${index + 1} is an ${
+        dogAge > 2 ? "adult" : "still a puppy 🐶"
+      }, and is ${dogAge} years old`
+    );
+  });
+};
+
+//// methods can be used
+
+console.log(dogsJulia[0].concat(dogsKate[0]));
+const correctedJuliaList = dogsJulia[0];
+console.log(correctedJuliaList);
+correctedJuliaList.splice(0, 1);
+correctedJuliaList.splice(-2);
+console.log(correctedJuliaList);
+
+checkDogs(dogsJulia[0], dogsKate[0]);
+console.log("****************** Test data 2 ******************");
+checkDogs(dogsJulia[1], dogsKate[1]);
