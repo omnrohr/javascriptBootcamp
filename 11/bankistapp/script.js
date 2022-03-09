@@ -88,123 +88,70 @@ const displayMovements = function (movements) {
   });
 };
 
+const createUserNameForArray = function (accs) {
+  accs.forEach(function (acc) {
+    acc.userName = acc.owner
+      .toLowerCase()
+      .split(' ')
+      .map(word => word[0])
+      .join('');
+    console.log(`user name for: ${acc.owner} is "${acc.userName}"`);
+    // console.log('user name for: ', acc.owner, acc.userName);
+  });
+};
+
+// const createUserName = function (username) {
+//   return username
+//     .toLowerCase()
+//     .split(' ')
+//     .map(word => word[0])
+//     .join('');
+// };
+
 displayMovements(account1.movements);
+// accounts.forEach(function (account) {
+//   account.username = createUserName(account.owner);
+//   console.log('user name for: ', account.owner, account.username);
+// });
 
-/////////////////////////////////////////////////
-/*
-/////////////////////////////////////////////////
-// Simple Array Methods
-let arr = ['a', 'b', 'c', 'd', 'e'];
+const calclulatDisplayBalance = function (mov) {
+  const balance = mov.reduce((acc, cur) => acc + cur, 0);
+  labelBalance.textContent = `${balance}€`;
+};
+calclulatDisplayBalance(account1.movements);
+createUserNameForArray(accounts);
+console.log(accounts);
 
-// SLICE
-console.log(arr.slice(2));
-console.log(arr.slice(2, 4));
-console.log(arr.slice(-2));
-console.log(arr.slice(-1));
-console.log(arr.slice(1, -2));
-console.log(arr.slice());
-console.log([...arr]);
-*/
-/*
-// SPLICE
-// console.log(arr.splice(2));
-arr.splice(-1);
-console.log(arr);
-arr.splice(1, 2);
-console.log(arr);
-*/
-/*
-// REVERSE
-arr = ['a', 'b', 'c', 'd', 'e'];
-const arr2 = ['j', 'i', 'h', 'g', 'f'];
-console.log(arr2.reverse());
-console.log(arr2);
-*/
-/*
-// CONCAT
-const letters = arr.concat(arr2);
-console.log(letters);
-console.log([...arr, ...arr2]);
+const withdrawals = movements.filter(mov => mov < 0);
+const deposits = movements.filter(mov => mov > 0);
+console.log(withdrawals, deposits);
+const balance = movements.reduce((acc, cur) => acc + cur);
+console.log(balance);
+const totalWithdrawals = withdrawals.reduce(function (
+  accumilator,
+  currentItem
+) {
+  return accumilator + currentItem;
+});
+console.log(totalWithdrawals);
 
-// JOIN
-console.log(letters.join(' - '));
-
-*/
-/*
-///////////////////////////////////////
-// The new at Method
-const arr = [23, 11, 64];
-console.log(arr[0]);
-console.log(arr.at(0));
-
-// getting last array element
-console.log(arr[arr.length - 1]);
-console.log(arr.slice(-1)[0]);
-console.log(arr.at(-1));
-
-console.log('jonas'.at(0));
-console.log('jonas'.at(-1));
-
-*/
-///////////////////////////////////////
-// Looping Arrays: forEach
-// const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
-
-/*
-movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
-movements.forEach(movement => console.log(movement));
-movements.forEach(function (movement) {
+const totalDeposits = deposits.reduce(function (
+  accumilator,
+  currentValue,
+  i,
+  arr
+) {
   console.log(
-    movement > 0
-      ? `You deposited ${movement}`
-      : `You withdrew ${Math.abs(movement)}`
+    `the iterator value for ${i} acc: ${accumilator} current value: ${currentValue}`
   );
-});
-*/
+  return accumilator + currentValue;
+},
+0); // 0 is for the first iteration value.
+console.log(totalDeposits);
+labelBalance.textContent = `${balance}€`;
 
-/*
-// for (const movement of movements) {
-for (const [i, movement] of movements.entries()) {
-  if (movement > 0) {
-    console.log(`Movement ${i + 1}: You deposited ${movement}`);
-  } else {
-    console.log(`Movement ${i + 1}: You withdrew ${Math.abs(movement)}`);
-  }
-}
-*/
-
-/*
-console.log('---- FOREACH ----');
-movements.forEach(function (mov, i, arr) {
-  if (mov > 0) {
-    console.log(`Movement ${i + 1}: You deposited ${mov}`);
-  } else {
-    console.log(`Movement ${i + 1}: You withdrew ${Math.abs(mov)}`);
-  }
-});
-// 0: function(200)
-// 1: function(450)
-// 2: function(400)
-// ...
-*/
-///////////////////////////////////////
-// forEach With Maps and Sets
-// Map
-// const currencies = new Map([
-//   ['USD', 'United States dollar'],
-//   ['EUR', 'Euro'],
-//   ['GBP', 'Pound sterling'],
-// ]);
-/*
-currencies.forEach(function (value, key, map) {
-  console.log(`${key}: ${value}`);
-});
-*/
-/*
-// Set
-const currenciesUnique = new Set(['USD', 'GBP', 'USD', 'EUR', 'EUR']);
-console.log(currenciesUnique);
-currenciesUnique.forEach(function (value, _, map) {
-  console.log(`${value}: ${value}`);
-});
-*/
+const maxMovement = movements.reduce(
+  (acc, cur) => (cur > acc ? cur : acc),
+  movements[0]
+);
+console.log(maxMovement);
