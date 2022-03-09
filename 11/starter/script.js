@@ -117,3 +117,35 @@ currenciesUnique.forEach(function (value, _, map) {
   console.log(`${value}: ${value}`);
 });
 */
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+const euroToUs = 1.1;
+const convertToUs = function (number) {
+  return Math.round(number * euroToUs);
+};
+const converted = movements.map(convertToUs);
+console.log('movements: ', movements);
+console.log('converted map: ', converted);
+const converted1 = movements.forEach(convertToUs);
+console.log(
+  'convert with arrow: ',
+  movements.map(movement => Math.round(movement * euroToUs))
+);
+
+const stringMovements = movements.map((mov, i) => {
+  return `Movement ${i + 1}: you ${
+    mov > 0 ? 'deposited' : 'withdrew'
+  } ${Math.abs(mov)}`;
+});
+
+console.log(stringMovements.join('\n'));
+
+const user = 'Obada alahdab';
+const createUserName = function (username) {
+  return username
+    .toLowerCase()
+    .split(' ')
+    .map(word => word[0])
+    .join('');
+};
+
+console.log(createUserName(user));
