@@ -71,14 +71,17 @@ const currencies = new Map([
   ['GBP', 'Pound sterling'],
 ]);
 
+// const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+let user;
+
+// const callingAccount = accounts.find(acc => acc.owner === 'Jonas Schmedtmann');
+
 ///// the app code
 
 const displayMovements = function (movements) {
-  //clearing the index page data
   containerMovements.innerHTML = '';
 
   movements.forEach(function (movement, i) {
-    //add the data in movements tabel
     const html = `<div class="movements__row"><div class="movements__type movements__type--${
       movement > 0 ? 'deposit' : 'withdrawal'
     }">${i} ${movement > 0 ? 'deposit' : 'withdrwal'}</div>
@@ -112,102 +115,101 @@ const createUserNameForArray = function (accs) {
       .split(' ')
       .map(word => word[0])
       .join('');
+    // console.log(`user name for: ${acc.owner} is "${acc.userName}"`);
+    // console.log('user name for: ', acc.owner, acc.userName);
   });
 };
 
-const calclulatDisplayBalance = function (acc) {
-  acc.balance = acc.movements.reduce((acc, cur) => acc + cur, 0);
-  labelBalance.textContent = `${acc.balance}€`;
-};
+// const createUserName = function (username) {
+//   return username
+//     .toLowerCase()
+//     .split(' ')
+//     .map(word => word[0])
+//     .join('');
+// };
 
-//calling the function to create usernames
+// displayMovements(account1.movements);
+// accounts.forEach(function (account) {
+//   account.username = createUserName(account.owner);
+//   console.log('user name for: ', account.owner, account.username);
+// });
+
+const calclulatDisplayBalance = function (mov) {
+  const balance = mov.reduce((acc, cur) => acc + cur, 0);
+  labelBalance.textContent = `${balance}€`;
+};
+// calclulatDisplayBalance(callingAccount.movements);
 createUserNameForArray(accounts);
+// console.log(accounts);
 
-// initialize user variable to use it outside the function
-let currentUser;
+// const withdrawals = movements.filter(mov => mov < 0);
+// const deposits = movements.filter(mov => mov > 0);
+// console.log(withdrawals, deposits);
+// const balance = movements.reduce((acc, cur) => acc + cur);
+// console.log(balance);
+// const totalWithdrawals = withdrawals.reduce(function (
+//   accumilator,
+//   currentItem
+// ) {
+//   return accumilator + currentItem;
+// });
+// console.log(totalWithdrawals);
 
-const updateUI = function (curUser) {
-  displayMovements(curUser.movements);
-  calcDisplaySummery(curUser.movements);
-  calclulatDisplayBalance(curUser);
-};
+// const totalDeposits = deposits.reduce(function (
+//   accumilator,
+//   currentValue,
+//   i,
+//   arr
+// ) {
+// console.log(
+//   `the iterator value for ${i} acc: ${accumilator} current value: ${currentValue}`
+// );
+//   return accumilator + currentValue;
+// },
+// 0); // 0 is for the first iteration value.
+// console.log(totalDeposits);
+// labelBalance.textContent = `${balance}€`;
+
+// const maxMovement = movements.reduce(
+//   (acc, cur) => (cur > acc ? cur : acc),
+//   movements[0]
+// );
+// console.log(maxMovement);
+// labelSumIn.textContent = totalDeposits;
+// labelSumOut.textContent = totalWithdrawals;
+
+// calcDisplaySummery(callingAccount.movements);
 
 btnLogin.addEventListener('click', function (e) {
   e.preventDefault();
   currentUser = accounts.find(acc => acc.userName === inputLoginUsername.value);
-
-  //updating the current user view
-
-  //initialize movements to call back the function at the end of event
   let movements;
 
   const checkUser = function (user) {
-    // "?"" ///// optinal chaining if user is undefined
-    // it will not seek for pin property
     if (user?.pin === Number(inputLoginPin.value)) {
       labelWelcome.textContent = `Welcome back ${user.owner}`;
-
+      console.log(user, movements);
       movements = user?.movements;
-      //remove the opacity to clear the window.
       containerApp.style.opacity = 100;
-      //clear the username and password fields
       inputLoginUsername.value = inputLoginPin.value = '';
-      //remove the foucs after successful login.
       inputLoginPin.blur();
 
-      //calling functions.
-      updateUI(user);
-      // displayMovements(user.movements);
-      // calcDisplaySummery(user.movements);
-      // calclulatDisplayBalance(user);
+      displayMovements(user.movements);
+      calcDisplaySummery(user.movements);
+      calclulatDisplayBalance(user.movements);
     } else {
-      //notify if the password is not correct and clear input.
       alert('please etnet a valid password!');
       inputLoginUsername.value = inputLoginPin.value = '';
     }
+    // const pin = user.pin;
+    // const inputPin = Number(inputLoginPin.value);
+    // console.log(user, pin, inputPin);
   };
-  // to alert user if not user or undefined then clear inputs
+
+  // user  checkUser(user));
   currentUser ||
     alert('Please enter a correct username!') ||
     (inputLoginUsername.value = inputLoginPin.value = '');
 
-  //calling the main funtion if user is a user.
   if (currentUser !== undefined) checkUser(currentUser);
-});
-
-///transfer money feature
-
-btnTransfer.addEventListener('click', function (e) {
-  e.preventDefault();
-  //get input data
-  const [transferToObj, transferToAmount] = [
-    accounts.find(acc => acc.userName === inputTransferTo.value),
-    Number(inputTransferAmount.value),
-  ];
-  //if object and amount is valid
-  if (
-    transferToObj &&
-    transferToObj !== currentUser &&
-    transferToAmount > 0 &&
-    currentUser.balance > transferToAmount
-  ) {
-    //clear input
-    inputTransferTo.value = inputTransferAmount.value = '';
-    //add new movement to transfer object movement
-    transferToObj?.movements.push(transferToAmount);
-    currentUser.movements.push(-transferToAmount);
-    updateUI(currentUser);
-  } else {
-    //if any of values is not valid
-    let message = '';
-    //check if faild from user name.
-    if (!transferToObj) message += 'faild, please check the username!' + '\n';
-    //check if faild for amount
-    if (transferToAmount < 0)
-      message += 'faild, the ammount can not be less than or equal 0!' + '\n';
-    if (transferToAmount > currentUser.balance)
-      message +=
-        'faild, the transfer ammount can not be greater than your balance!';
-    alert(message);
-  }
 });
