@@ -72,6 +72,7 @@ const currencies = new Map([
 ]);
 
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+const callingAccount = account1;
 
 ///// the app code
 
@@ -88,6 +89,18 @@ const displayMovements = function (movements) {
   });
 };
 
+const calcDisplaySummery = function (movements) {
+  const totalDeposits = movements
+    .filter(mov => mov > 0)
+    .reduce((acc, cur) => acc + cur);
+  labelSumIn.textContent = totalDeposits + '€';
+  labelSumOut.textContent = `${Math.abs(
+    movements.filter(mov => mov < 0).reduce((acc, cur) => acc + cur)
+  )}€`;
+  labelSumInterest.textContent =
+    (totalDeposits * callingAccount.interestRate) / 100 + '€';
+};
+
 const createUserNameForArray = function (accs) {
   accs.forEach(function (acc) {
     acc.userName = acc.owner
@@ -95,7 +108,7 @@ const createUserNameForArray = function (accs) {
       .split(' ')
       .map(word => word[0])
       .join('');
-    console.log(`user name for: ${acc.owner} is "${acc.userName}"`);
+    // console.log(`user name for: ${acc.owner} is "${acc.userName}"`);
     // console.log('user name for: ', acc.owner, acc.userName);
   });
 };
@@ -118,22 +131,22 @@ const calclulatDisplayBalance = function (mov) {
   const balance = mov.reduce((acc, cur) => acc + cur, 0);
   labelBalance.textContent = `${balance}€`;
 };
-calclulatDisplayBalance(account1.movements);
+calclulatDisplayBalance(callingAccount.movements);
 createUserNameForArray(accounts);
-console.log(accounts);
+// console.log(accounts);
 
 const withdrawals = movements.filter(mov => mov < 0);
 const deposits = movements.filter(mov => mov > 0);
-console.log(withdrawals, deposits);
+// console.log(withdrawals, deposits);
 const balance = movements.reduce((acc, cur) => acc + cur);
-console.log(balance);
+// console.log(balance);
 const totalWithdrawals = withdrawals.reduce(function (
   accumilator,
   currentItem
 ) {
   return accumilator + currentItem;
 });
-console.log(totalWithdrawals);
+// console.log(totalWithdrawals);
 
 const totalDeposits = deposits.reduce(function (
   accumilator,
@@ -141,17 +154,21 @@ const totalDeposits = deposits.reduce(function (
   i,
   arr
 ) {
-  console.log(
-    `the iterator value for ${i} acc: ${accumilator} current value: ${currentValue}`
-  );
+  // console.log(
+  //   `the iterator value for ${i} acc: ${accumilator} current value: ${currentValue}`
+  // );
   return accumilator + currentValue;
 },
 0); // 0 is for the first iteration value.
-console.log(totalDeposits);
+// console.log(totalDeposits);
 labelBalance.textContent = `${balance}€`;
 
 const maxMovement = movements.reduce(
   (acc, cur) => (cur > acc ? cur : acc),
   movements[0]
 );
-console.log(maxMovement);
+// console.log(maxMovement);
+// labelSumIn.textContent = totalDeposits;
+// labelSumOut.textContent = totalWithdrawals;
+
+calcDisplaySummery(callingAccount.movements);
