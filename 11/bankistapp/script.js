@@ -212,6 +212,21 @@ btnTransfer.addEventListener('click', function (e) {
   }
 });
 
+btnLoan.addEventListener('click', function (e) {
+  e.preventDefault();
+  //get the ammount requested
+  const loanAmount = Number(inputLoanAmount.value);
+  //clear the amount in UI
+  inputLoanAmount.value = '';
+  if (loanAmount && currentUser.movements.some(mov => mov > loanAmount * 0.1)) {
+    currentUser.movements.push(loanAmount);
+    alert('your loan added successfully, Injoi!');
+    updateUI(currentUser);
+  } else {
+    alert('requestd amount is higer than allowd');
+  }
+});
+
 btnClose.addEventListener('click', function (e) {
   e.preventDefault();
   const [closeAccountObj, closeConfirmPIN] = [
