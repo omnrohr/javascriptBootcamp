@@ -72,12 +72,17 @@ const currencies = new Map([
 ]);
 
 ///// the app code
-
-const displayMovements = function (movements) {
+/// added new method for sorting or not for sort btn
+const displayMovements = function (movements, sroted = false) {
   //clearing the index page data
   containerMovements.innerHTML = '';
+  //get new array if sorted is true, the sort method will
+  //mute the original array, so we can not reverse the action
+  const sMomvements = sroted
+    ? movements.slice().sort((a, b) => a - b)
+    : movements;
 
-  movements.forEach(function (movement, i) {
+  sMomvements.forEach(function (movement, i) {
     //add the data in movements tabel
     const html = `<div class="movements__row"><div class="movements__type movements__type--${
       movement > 0 ? 'deposit' : 'withdrawal'
@@ -246,4 +251,52 @@ btnClose.addEventListener('click', function (e) {
     containerApp.style.opacity = 0;
     labelWelcome.textContent = 'Log in to get started';
   }
+});
+
+const bankAccountsBalance = accounts
+  .map(acc => acc.movements)
+  .flat()
+  .reduce((acc, cur) => acc + cur, 0);
+console.log('bank total accounts balance: ', bankAccountsBalance);
+
+const bankAccountsBalanceFlatMap = accounts
+  .flatMap(acc => acc.movements)
+  .reduce((acc, cur) => acc + cur, 0);
+console.log(
+  'bank total accounts balance flat map: ',
+  bankAccountsBalanceFlatMap
+);
+
+// let ascending;
+// btnSort.addEventListener('click', function (e) {
+//   e.preventDefault();
+//   let sortedMovements = [...currentUser.movements];
+//   if (ascending) {
+//     sortedMovements.sort(function (a, b) {
+//       if (a > b) return -1;
+//       else if (b > a) return 1;
+//       else return 0;
+//     });
+//     ascending = false;
+//     displayMovements(sortedMovements);
+//   } else if (!ascending) {
+//     sortedMovements.sort(function (a, b) {
+//       if (a > b) return 1;
+//       else if (b > a) return -1;
+//       else return 0;
+//     });
+//     ascending = true;
+//     displayMovements(sortedMovements);
+//   }
+// });
+
+// status variable to wache the status
+let sorting = false;
+
+btnSort.addEventListener('click', function (e) {
+  e.preventDefault();
+  // passing the opposite status.
+  displayMovements(currentUser.movements, !sorting);
+  //then revers status to back normal at second click
+  sorting = !sorting;
 });
