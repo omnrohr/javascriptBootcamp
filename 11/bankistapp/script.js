@@ -211,3 +211,24 @@ btnTransfer.addEventListener('click', function (e) {
     alert(message);
   }
 });
+
+btnClose.addEventListener('click', function (e) {
+  e.preventDefault();
+  const [closeAccountObj, closeConfirmPIN] = [
+    accounts.find(acc => acc.userName === inputCloseUsername.value),
+    Number(inputClosePin.value),
+  ];
+  if (
+    closeAccountObj &&
+    closeAccountObj === currentUser &&
+    closeConfirmPIN === currentUser.pin
+  ) {
+    accounts.splice(
+      accounts.findIndex(acc => acc === closeAccountObj),
+      1
+    );
+    inputClosePin.value = inputCloseUsername.value = '';
+    containerApp.style.opacity = 0;
+    labelWelcome.textContent = 'Log in to get started';
+  }
+});
