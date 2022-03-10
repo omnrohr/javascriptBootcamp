@@ -149,3 +149,69 @@ const createUserName = function (username) {
 };
 
 console.log(createUserName(user));
+
+console.log(movements);
+console.log(movements.includes(-130));
+
+//if one item suticfy the condition
+console.log(movements.some(mov => mov > 450));
+//if all items saticfy the condition
+console.log(movements.every(mov => mov > 0));
+
+///// sorting arrays
+const account1 = {
+  owner: 'OJonas Schmedtmann',
+  movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
+  interestRate: 1.2, // %
+  pin: 1111,
+};
+
+const account2 = {
+  owner: 'Jessica Davis',
+  movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
+  interestRate: 1.5,
+  pin: 2222,
+};
+
+const account3 = {
+  owner: 'ASteven Thomas Williams',
+  movements: [200, -200, 340, -300, -20, 50, 400, -460],
+  interestRate: 0.7,
+  pin: 3333,
+};
+
+const account4 = {
+  owner: 'BSarah Smith',
+  movements: [430, 1000, 700, 50, 700, 90],
+  interestRate: 1,
+  pin: 4444,
+};
+
+const accounts = [account1, account2, account3, account4];
+
+const owners = accounts.map(function (acc) {
+  return acc.owner;
+});
+console.log(owners);
+//sort method is working for strings in default and its mutate
+//the original array so copy the array then sort it.
+console.log([...owners].sort());
+console.log(owners);
+
+const allMovements = accounts.flatMap(acc => acc.movements);
+console.log(allMovements);
+
+//both can work but if chaining slice is your best choice
+const sortedMovements = [...allMovements].sort((a, b) => a - b);
+const sortedMovements1 = allMovements.slice().sort((a, b) => a - b);
+console.log(sortedMovements);
+
+const otherSortedMovement = allMovements.slice().sort(function (a, b) {
+  // any positive value means to switch the order if ascending
+  // if a is bigger than b, b is should be before a
+  if (a > b) return 1;
+  //any nigative value means to keep the order if ascending
+  if (b > a) return -1;
+  else return 0;
+});
+console.log(otherSortedMovement);
