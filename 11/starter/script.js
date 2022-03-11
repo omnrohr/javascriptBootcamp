@@ -215,3 +215,138 @@ const otherSortedMovement = allMovements.slice().sort(function (a, b) {
   else return 0;
 });
 console.log(otherSortedMovement);
+
+/// creating arrays/////
+const arrx = new Array(1, 2, 3, 4, 5, 6, 7);
+console.log(arrx);
+
+// create array with 7 empty fields
+const arry = new Array(7);
+console.log('array X: ', arry);
+
+arry.fill(1);
+console.log('array Y: ', arry);
+
+const arrZ = new Array(4).fill(0);
+console.log('array Z: ', arrZ);
+
+// _ means throw away variable because its allways undefined
+// in creating new array.
+const fromArray = Array.from({ length: 10 }, (_, i) => {
+  console.log(_);
+  return i + 1 ** 2;
+});
+console.log('array form array: ', fromArray);
+
+const diceRollsArray = Array.from({ length: 100 }, () =>
+  Math.round(Math.random() * 6 + 1)
+);
+console.log('array dice random : ', diceRollsArray);
+
+const bankAccountBalance = function (accs) {
+  return accs.flatMap(acc => acc.movements).reduce((acc, cur) => acc + cur, 0);
+};
+console.log('all bank balances: ', bankAccountBalance(accounts));
+
+const bankDeposits = function (accs) {
+  return accs
+    .flatMap(acc => acc.movements)
+    .reduce((acc, cur) => (cur > 0 ? acc + cur : acc + 0));
+};
+console.log('all bank deposits: ', bankDeposits(accounts));
+
+const bankWithdrawals = function (accs) {
+  return accs
+    .flatMap(acc => acc.movements)
+    .reduce((acc, cur) => (cur < 0 ? acc + cur : acc), 0);
+};
+
+console.log('all bank deposits: ', bankWithdrawals(accounts));
+
+const countMoreThanThousand = function (accs) {
+  return accs.flatMap(acc => acc.movements).filter(v => v >= 1000).length;
+};
+console.log('more than thousand: ', countMoreThanThousand(accounts));
+
+const countMoreThanThousandRe = function (accs) {
+  return accs
+    .flatMap(acc => acc.movements)
+    .reduce((acc, cur) => (cur >= 100 ? ++acc : acc), 0);
+};
+console.log('more than thousand reduce: ', countMoreThanThousand(accounts));
+
+const someOfDebositsObj = function (accs) {
+  return accs
+    .flatMap(acc => acc.movements)
+    .reduce(
+      function (sum, cur) {
+        cur > 0 ? (sum.deposits += cur) : (sum.withdrawals += cur);
+        return sum;
+      },
+      { deposits: 0, withdrawals: 0 }
+    );
+};
+console.log('first some deposti object:', someOfDebositsObj(accounts));
+
+const { deposits1, withdrawals1 } = accounts
+  .flatMap(acc => acc.movements)
+  .reduce(
+    (sum, cur) => {
+      sum[cur > 0 ? 'deposits1' : 'withdrawals1'] += cur;
+      return sum;
+    },
+    { deposits1: 0, withdrawals1: 0 }
+  );
+console.log('second some deposti object:', deposits1, withdrawals1);
+
+// this is a nice title -> This Is a Nice Title
+
+const convertToTitle = function (title) {
+  let newstr = title.split(' ').reduce((all, word) => {
+    return (
+      all +
+      ' ' +
+      (word.length > 1
+        ? word[0].toUpperCase() + word.slice(1).toLowerCase()
+        : word.toLowerCase())
+    );
+  }, '');
+  return newstr;
+};
+
+console.log(convertToTitle('this is a nice title'));
+console.log(
+  convertToTitle('If you love a ONE friend what You CAN Do For him!')
+);
+
+const convertToTitle2 = function (title) {
+  const exeptions = ['a', 'with', 'at', 'an', 'the', 'but', 'for'];
+  return title
+    .toLowerCase()
+    .split(' ')
+    .reduce((all, cur) => {
+      all +=
+        ' ' +
+        (!exeptions.includes(cur) ? cur[0].toUpperCase() + cur.slice(1) : cur);
+      return all;
+    }, '');
+};
+
+console.log(
+  convertToTitle2('If you love a ONE friend what You CAN Do For him!')
+);
+
+const convertToTitle3 = function (title) {
+  const exeptions = ['a', 'with', 'at', 'an', 'the', 'but', 'for'];
+  return title
+    .toLowerCase()
+    .split(' ')
+    .map(word =>
+      exeptions.includes(word) ? word : word[0].toUpperCase() + word.slice(1)
+    )
+    .join(' ');
+};
+
+console.log(
+  convertToTitle3('If you love a ONE friend what You CAN Do For him!')
+);
