@@ -208,7 +208,32 @@ const getPassdTimeFormatedYYMMDD = function (time, local) {
 
 // getPassdTimeFormatedYYMMDD(account1.movementsDates[0]);
 
+const startLogoutTimer = function () {
+  let time = 30;
+  const tick = function () {
+    const min = Math.trunc(time / 60);
+    const sec = time % 60;
+    labelTimer.textContent = `${(min + '').padStart(2, 0)}:${(
+      sec + ''
+    ).padStart(2, 0)}`;
+    if (time === 0) {
+      clearInterval(timer);
+      labelWelcome.textContent = 'Login to get started';
+      containerApp.style.opacity = 0;
+    }
+    time--;
+  };
+  tick();
+  const timer = setInterval(tick, 1000);
+  return timer;
+};
+
 const updateUI = function (acc) {
+  // Start logout Timer
+
+  if (timer) clearInterval(timer);
+  timer = startLogoutTimer();
+
   // Display movements
   displayMovements(acc);
 
@@ -224,7 +249,7 @@ const updateUI = function (acc) {
 
 ///////////////////////////////////////
 // Event handlers
-let currentAccount;
+let currentAccount, timer;
 
 btnLogin.addEventListener('click', function (e) {
   // Prevent form from submitting
@@ -368,6 +393,27 @@ const changeBackground = function () {
 // currentAccount = account1;
 // updateUI(currentAccount);
 // containerApp.style.opacity = 100;
+
+const args = [' first param ', ' second param '];
+
+const timer1 = setTimeout(
+  (time1, time2) => console.log(`${time1}time out finished${time2}`),
+  5000,
+  ...args
+);
+
+//cnacel the timer
+
+if (args.includes('first')) clearTimeout(timer1);
+
+// time out for a cerine time
+// setInterval(() => console.log(new Date()), 5000);
+// setInterval(() => {
+//   const nowTime = new Date();
+//   console.log(
+//     `${nowTime.getHours()}:H ${nowTime.getMinutes()}:M ${nowTime.getSeconds()}:S`
+//   );
+// }, 5000);
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
