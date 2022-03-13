@@ -16,9 +16,9 @@ const account1 = {
   pin: 1111,
 
   movementsDates: [
-    '2019-11-18T21:31:17.178Z',
-    '2019-12-23T07:42:02.383Z',
-    '2020-01-28T09:15:04.904Z',
+    '2022-03-13T09:38:52.483Z',
+    '2022-03-11T09:38:52.483Z',
+    '2022-03-12T08:38:52.483Z',
     '2020-04-01T10:17:24.185Z',
     '2020-05-08T14:11:59.604Z',
     '2020-05-27T17:01:17.194Z',
@@ -81,9 +81,26 @@ const inputClosePin = document.querySelector('.form__input--pin');
 /////////////////////////////////////////////////
 // Functions
 
+const formatCur = function (value, local, currency) {
+  return Intl.NumberFormat(local, {
+    style: 'currency',
+    currency: currency,
+  }).format(value);
+};
+
 const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = '';
-  labelDate.innerHTML = getFormatedDate(Date.now());
+  const options = {
+    hour: 'numeric',
+    minute: 'numeric',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    weekday: 'long',
+  };
+  //get the user local format
+  const local = navigator.languages;
+  labelDate.innerHTML = Intl.DateTimeFormat(local, options).format(new Date());
 
   const movs = sort
     ? acc.movements.slice().sort((a, b) => a - b)
@@ -98,11 +115,15 @@ const displayMovements = function (acc, sort = false) {
       i + 1
     } ${type}</div>
     <div class="movements__date"> ${getFormatedDate(
-      acc.movementsDates[i]
+      acc.movementsDates[i],
+      acc.local
     )} <b style="padding-left:10px"> ${getPassdTimeFormatedYYMMDD(
-      acc.movementsDates[i]
+      acc.movementsDates[i],
+      acc.local
     )}</b></div>
-        <div class="movements__value">${mov.toFixed(2)}€</div>
+        <div class="movements__value">${
+          /*mov.toFixed(2)*/ formatCur(mov, acc.local, acc.currency)
+        }€</div>
       </div>
     `;
 
@@ -112,7 +133,8 @@ const displayMovements = function (acc, sort = false) {
 
 const calcDisplayBalance = function (acc) {
   acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `${acc.balance.toFixed(2)}€`;
+  // labelBalance.textContent = `${acc.balance.toFixed(2)}€`;
+  labelBalance.textContent = formatCur(acc.balance, acc.local, acc.currency);
 };
 
 const calcDisplaySummary = function (acc) {
@@ -154,26 +176,37 @@ const getPassdTimeInDays = function (time) {
   );
 };
 
-const getPassdTimeFormatedYYMMDD = function (time) {
+const getPassdTimeFormatedYYMMDD = function (time, local) {
   let formatedTime = '';
   time = new Date(time);
   const todays = new Date();
   const pastInDays = Math.trunc((todays - time) / (1000 * 60 * 60 * 24));
+  if (pastInDays < 8) {
+    if (pastInDays == 0) formatedTime = 'Today';
+    else if (pastInDays == 1) formatedTime = 'Yesterday';
+    else formatedTime = `${pastInDays} days ago`;
+  } else if (pastInDays >= 8) {
+    const years = Math.trunc(pastInDays / 365);
+    const months = Math.trunc((pastInDays % 365) / 30);
+    const days = Math.trunc(pastInDays % (365 / 30));
+    // console.log(
+    //   'getPassdTimeFormatedYYMMDD',
+    //   `${years} y, ${months} m, ${(days + '').padStart(2, 0)} d`
+    // );
+
+    formatedTime += `${years} Y, ${(months + '').padStart(2, 0)} m, ${(
+      days + ''
+    ).padStart(2, 0)} d ago`;
+
+    //using javascript formatting
+    // formatedTime = Intl.DateTimeFormat(local).format(time);
+  }
   // console.log('past in days: ', pastInDays);
-  const years = Math.trunc(pastInDays / 365);
-  const months = Math.trunc((pastInDays % 365) / 30);
-  const days = Math.trunc(pastInDays % (365 / 30));
-  // console.log(
-  //   'getPassdTimeFormatedYYMMDD',
-  //   `${years} y, ${months} m, ${(days + '').padStart(2, 0)} d`
-  // );
-  formatedTime += `${years} Y, ${(months + '').padStart(2, 0)} m, ${(
-    days + ''
-  ).padStart(2, 0)} d`;
+
   return formatedTime;
 };
 
-getPassdTimeFormatedYYMMDD(account1.movementsDates[0]);
+// getPassdTimeFormatedYYMMDD(account1.movementsDates[0]);
 
 const updateUI = function (acc) {
   // Display movements
@@ -200,7 +233,7 @@ btnLogin.addEventListener('click', function (e) {
   currentAccount = accounts.find(
     acc => acc.username === inputLoginUsername.value
   );
-  console.log(currentAccount);
+  // console.log(currentAccount);
 
   if (currentAccount?.pin === +inputLoginPin.value) {
     // Display UI and message
@@ -290,12 +323,13 @@ btnSort.addEventListener('click', function (e) {
   sorted = !sorted;
 });
 
-const getFormatedDate = function (dateStamp) {
+const getFormatedDate = function (dateStamp, local) {
   dateStamp = new Date(dateStamp);
-  return `${dateStamp.getFullYear()}/${(dateStamp.getMonth() + '').padStart(
-    2,
-    0
-  )}/${(dateStamp.getDate() + '').padStart(2, 0)}`;
+  // return `${dateStamp.getFullYear()}/${(dateStamp.getMonth() + '').padStart(
+  //   2,
+  //   0
+  // )}/${(dateStamp.getDate() + '').padStart(2, 0)}`;
+  return Intl.DateTimeFormat(local).format(dateStamp);
 };
 
 // console.log(getFormatedDate(account1.movementsDates[0]));
