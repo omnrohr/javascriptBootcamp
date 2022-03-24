@@ -1,0 +1,46 @@
+abstraction: it is a way to hide unnecessary methods of the user or the API or the interface.
+encapsulation : is to keep some features and methods hidden form outside class.
+polymorphism: child class can overwrite inherited a parent methods.
+prototypes: - each object linked to a prototype object.
+            - each object inherited the parent prototype methods.
+            - behavior is delegated to linked prototype object.
+
+
+crete prototype:
+                - constructor function.
+                    * technique to create object form function.
+                    * this is the build in way like arrays implemented. 
+                - ES classes.
+                    * modern way.
+                    * syntax sugar, it work exactly like constructor.
+                    * it is not behave like normal OOP classes. 
+                - object.crete().
+                    * easiest and straightforward way of linking an object to a prototype.
+                    
+
+create class:
+                - function decelerations and function expression are working to create class.
+                - arrow function do not work, they do not have this keyword.
+                - a class constructor is similar to function but we user new keyword.
+                - if you add new keyword you are calling the constructor.
+
+new operator:  
+                - new empty object is created.
+                - it will call the function.
+                - set this keyword to the object that created.
+                - object will linked to prototype.
+                - the function will return automatically the object created.
+
+creating object:
+                - if you create a method directly inside the object you are copying 
+                the same method to every new object and that is bad practice.
+                - each function has a property called prototype even the constructor.
+                - each object will inherit all methods from parent function prototype.
+                
+prototype:      
+                - object prototype is find by object.__proto__.
+                - to check prototype of instance and main class use object.__proto__ === class.prototype
+                or class.prototype.isPrototypeOf(object).
+                - to add a method to a class use class.prototype.methodName = function...
+                - you can use this inside the method.
+                
