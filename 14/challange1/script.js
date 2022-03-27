@@ -68,3 +68,27 @@ console.log('after adding init method to Car Class: ', car3.accelerator());
 // );
 
 console.log(car3.__proto__, Car.prototype);
+
+const CarCv = function (make, speed, charge) {
+  Car.call(this, make, speed);
+  this.charge = charge;
+};
+
+CarCv.prototype = Object.create(Car.prototype);
+CarCv.prototype.constructor = CarCv;
+CarCv.prototype.chargeBattery = function (chargeTo) {
+  this.charge = chargeTo;
+};
+CarCv.prototype.accelerate = function () {
+  this.speed += 20;
+  this.charge--;
+  console.log(
+    `the ${this.make} is going at speed ${this.speed}KM/h, and its battery is ${this.charge}%`
+  );
+};
+
+const tesla = new CarCv('Tesla', 100, 50);
+tesla.accelerate();
+tesla.chargeBattery(70);
+console.log('tesla car after recharge battery: ', tesla.charge);
+console.log('Tesla break method form Parent Class: ', tesla.break());
