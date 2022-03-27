@@ -9,9 +9,9 @@ function func2() {
   console.log('helllllllo');
 }
 
-const Person = function (firstName, lastName) {
+const Person = function (firstName, birthDate) {
   this.firstName = firstName;
-  this.lastName = lastName;
+  this.birthDate = birthDate;
 };
 
 // static method
@@ -21,8 +21,8 @@ Person.staticMethod = function () {
 
 Person.staticMethod();
 
-console.log(new Person('obada', 'alahdab'));
-const obada = new Person('obada', 'alahdab');
+console.log(new Person('obada', 1980));
+const obada = new Person('obada', 1980);
 console.log('is instance of person: ', obada instanceof Person);
 
 const obadas = {};
@@ -34,10 +34,10 @@ console.log(obadas);
 
 // adding method to prototype
 
-Person.prototype.calculateAge = function (birthDate) {
-  return 2022 - birthDate;
+Person.prototype.calculateAge = function () {
+  return 2022 - this.birthDate;
 };
-console.log('calculate age method: ', obada.calculateAge(1980));
+console.log('calculate age method: ', obada.calculateAge());
 
 /// using this inside the function
 Person.prototype.getFullName = function () {
@@ -157,3 +157,91 @@ console.log(anyObject.anotherBehavior());
 anyObject.behavior = 500;
 console.log(anyObject.arr);
 PersonClass.staticMethod();
+
+// using Object.create()
+
+const objectsCreate = {
+  calculateAge() {
+    return 2022 - this.birthDate;
+  },
+  init(firstName, birthDate) {
+    this.firstName = firstName;
+    this.birthDate = birthDate;
+  },
+};
+
+const rana = Object.create(objectsCreate);
+console.log('objects create add proto type: ', rana.__proto__);
+
+rana.init('rana', 1990);
+console.log('using method form objects create: ', rana.calculateAge());
+const seba = Object.create(objectsCreate);
+seba.__proto__ = objectsCreate;
+seba.init('seba', 2005);
+console.log('using __proto__ manually: ', seba.calculateAge());
+
+//classes inheritance
+
+// first constructor method
+const Student = function (firstName, birthDate, course) {
+  //replace the first name and birth date with person class
+  //to inherit the functionality.
+  // this.firstName = firstName;
+  // this.birthDate = birthDate;
+
+  // booth works....
+  // Person.bind(this)(firstName, birthDate);
+  Person.call(this, firstName, birthDate);
+  this.course = course;
+};
+
+// console.log('student proto', Student.__proto__, Student.prototype);
+Student.prototype = Object.create(Person.prototype);
+
+// this also work but i came up with
+// Student.prototype = new Object(Person.prototype);
+
+/// this also work but i came up with.
+// Student.prototype = new Person();
+
+// fix the child class constructor
+Student.prototype.constructor = Student;
+
+console.log(
+  'Person Parent Proto: ',
+  Person.__proto__,
+  'Person prototype: ',
+  Person.prototype
+);
+console.log(
+  'student Parent prototype is: ',
+  Student.__proto__,
+  'Student prototype is: ',
+  Student.prototype
+);
+Student.prototype.identify = function () {
+  return `this is ${this.firstName} born in ${this.birthDate}: enroll in ${this.course} course.`;
+};
+const mike = new Student('mike', 2002, 'javaScript');
+
+console.log('Mike in Class inheritance: ', mike);
+console.log('mike identify: ', mike.identify());
+console.log('use person class on mike: ', mike.calculateAge());
+
+//// apply classes inheritance for ES6
+
+class StudentClass extends PersonClass {
+  constructor(firstName, birthDate, course) {
+    super(firstName, birthDate);
+    this.course = course;
+  }
+  identify() {
+    console.log(
+      `this is ${this.firstName} born in ${this.birthDate}: enroll in ${this.course} course.`
+    );
+  }
+}
+
+const sarah = new StudentClass('Sarah', 2000, 'Python');
+sarah.identify();
+console.log('sarah age: ', sarah.calAge());

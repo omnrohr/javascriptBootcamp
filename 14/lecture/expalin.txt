@@ -92,3 +92,45 @@ static function:
                 object.methodName(){do something}.
                 - to add a static method to a class, insert the method after static keyword
                 static methodName(){do something};
+
+
+create class with object.create() method:
+                - It is similar to object literal, instead object literal using new keyword
+                you will use Object.create(Object Name) like
+                const objectName = { 
+                    some property
+                    some methods
+                }
+                const something = Object.create(objectName);
+                this will add the something.__proto__ to objectName.
+                then add other methods and property as object literal.
+
+
+******************** add inheritance to classes ********************
+Classes constructor: 
+                - To add inheritance to class constructor method:
+                inside the class constructor add the parent class with call or bind methods
+                then add one more expression to the child class like so:
+                const ChildClass = function (parentArgs, childArgs) {
+                parentClass.bind(this)(ParentArgs);
+                // or //
+                Person.call(this, ParentArgs);
+                this.childArgs = childArgs;
+                };
+                then connect child to parent prototypes like so:
+                ChildClass.prototype = Object.create(ParentClass.prototype).
+                or
+                /// carefully the below methods I have came up with. 
+                ChildClass.prototype = new Object(ParentClass.prototype).
+                or 
+                ChildClass.prototype = new ParentClass();
+                now you can use ParentClass methods on child instances.
+
+                - Fix ChildClass instance prototype, 
+                change the property of ChildClass for constructor by:
+                ChildClass.prototype.constructor = ChildClass;
+
+
+Classes ES6:
+                - similar to java call super then pass the args.
+                - the difference is you need to call it constructor not the same ClassName.
