@@ -43,4 +43,52 @@ prototype:
                 or class.prototype.isPrototypeOf(object).
                 - to add a method to a class use class.prototype.methodName = function...
                 - you can use this inside the method.
-                
+                - object __proto__ is the function prototype;
+                - function __proto__ is native code.
+                - object .prototype is undefined.
+                - I can add and edit prototype and __proto__ for objects.
+                - I can set object __proto__ to any type I want then the type methods
+                can be called normally.
+
+
+class keyword:
+                - class keyword is a syntax sugar.
+                - all methods in class will be kept inside the class only
+                it will never coped to objects.
+                - Class expression like class ClassName {}.
+                - Class decelerations like const ClassName = class{}.
+                - Classes are not hoisted 'means you can not use them before decelerations'.
+                - Classes are first class citizens. 'means we can pass them into functions 
+                and return them from functions'.
+                - The class buddy is executed with strict mode even if you not mention that.
+
+******************** getters and setters ********************
+
+getters:        - To add getter to an literal 
+                object {
+                    property: 'something',
+                    get behaviorName (args){
+                        return this.property + action;
+                    }
+                }
+                then call it directly like object.behaviorName; 
+                without calling the method.
+                so by adding get keyword to the behavior or method you convert it to getter.
+
+
+setters:        - like getters with keyword set and one parameter.
+                object {..... getter 
+                set behaviorName(arg){
+                    do something.
+                    }
+                }
+                then call it like an property like this:
+                object.behaviorName = value;
+                remember you can not call it like a function and pass it the arg.
+                so object.behaviorName(arg) is not valid.
+
+static function:
+                - to add a static method to literal object just add it as a property.
+                object.methodName(){do something}.
+                - to add a static method to a class, insert the method after static keyword
+                static methodName(){do something};
