@@ -547,7 +547,7 @@ const controlSearchResults = async function() {
         _searchViewDefault.default.clear();
         await _model.loadSearchResults(query);
         // resultsView.render(model.state.search.results);
-        _resultsViewDefault.default.render(_model.getSearchResultPage(2));
+        _resultsViewDefault.default.render(_model.getSearchResultPage());
         _paginationViewDefault.default.render(_model.state.search);
     } catch (err) {
         throw err;
@@ -555,9 +555,14 @@ const controlSearchResults = async function() {
 };
 // window.addEventListener('hashchange', getData);
 // window.addEventListener('load', getData);
+const pagePagination = function(page) {
+    _resultsViewDefault.default.render(_model.getSearchResultPage(page));
+    _paginationViewDefault.default.render(_model.state.search);
+};
 const init = function() {
     _recipeViewDefault.default.addHandlerRender(controlRecipes);
     _searchViewDefault.default.addHandlerSearch(controlSearchResults);
+    _paginationViewDefault.default.addPaginationClickHandler(pagePagination);
 };
 init();
 
@@ -1219,15 +1224,51 @@ var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
 var _model = require("../model");
 class PaginationView extends _viewDefault.default {
     _parentElement = document.querySelector('.pagination');
+    addPaginationClickHandler(handler) {
+        this._parentElement.addEventListener('click', function(e) {
+            e.preventDefault();
+            const btn = e.target.closest('.btn--inline');
+            if (!btn) return;
+            const gotoPage = +btn.dataset.goto;
+            handler(gotoPage);
+        });
+    }
     _generateMarkup() {
         const numPages = Math.ceil(this._data.results.length / this._data.resultPerPage);
         // scenarios
         // 1- page 1 and there are other pages
-        if (numPages > 1 && this._data.page === 1) return `page1 and others`;
+        if (numPages > 1 && this._data.page === 1) return `
+
+          <button data-goto="${this._data.page + 1}" class="btn--inline pagination__btn--next">
+            <span>Page ${this._data.page + 1}</span>
+            <svg class="search__icon">
+              <use href="${_iconsSvgDefault.default}#icon-arrow-right"></use>
+            </svg>
+          </button>
+      `;
         // 3- last page
-        if (numPages === this._data.page && numPages > 1) return `last page`;
+        if (numPages === this._data.page && numPages > 1) return `
+        <button data-goto="${this._data.page - 1}" class="btn--inline pagination__btn--prev">
+            <svg class="search__icon">
+              <use href="${_iconsSvgDefault.default}#icon-arrow-left"></use>
+            </svg>
+            <span>Page ${this._data.page - 1}</span>
+          </button>`;
         // 4- other page
-        if (this._data.page < numPages) return `other page`;
+        if (this._data.page < numPages) return `
+      <button data-goto="${this._data.page - 1}" class="btn--inline pagination__btn--prev">
+      <svg class="search__icon">
+        <use href="${_iconsSvgDefault.default}#icon-arrow-left"></use>
+      </svg>
+      <span>Page ${this._data.page - 1}</span>
+    </button>
+    <button data-goto="${this._data.page + 1}" class="btn--inline pagination__btn--next">
+    <span>Page ${this._data.page + 1}</span>
+    <svg class="search__icon">
+      <use href="${_iconsSvgDefault.default}#icon-arrow-right"></use>
+    </svg>
+  </button>
+      `;
         // 2- page 1 and there is no other pages
         // if (!numPages || numPages === 1) return `one page only`;
         // or
