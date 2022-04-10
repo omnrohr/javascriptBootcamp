@@ -522,8 +522,12 @@ var _searchView = require("./views/searchView");
 var _searchViewDefault = parcelHelpers.interopDefault(_searchView);
 var _resultsView = require("./views/resultsView");
 var _resultsViewDefault = parcelHelpers.interopDefault(_resultsView);
+var _paginationView = require("./views/paginationView");
+var _paginationViewDefault = parcelHelpers.interopDefault(_paginationView);
 ///////////////////////////////////////
-if (module.hot) module.hot.accept();
+// if (module.hot) {
+//   module.hot.accept();
+// }
 const controlRecipes = async function() {
     try {
         const id = window.location.hash.slice(1);
@@ -542,7 +546,9 @@ const controlSearchResults = async function() {
         if (!query) return;
         _searchViewDefault.default.clear();
         await _model.loadSearchResults(query);
-        _resultsViewDefault.default.render(_model.state.search.results);
+        // resultsView.render(model.state.search.results);
+        _resultsViewDefault.default.render(_model.getSearchResultPage(2));
+        _paginationViewDefault.default.render(_model.state.search);
     } catch (err) {
         throw err;
     }
@@ -555,7 +561,7 @@ const init = function() {
 };
 init();
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./model":"Y4A21","./views/recipeView":"l60JC","./views/searchView":"9OQAM","./views/resultsView":"cSbZE"}],"gkKU3":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./model":"Y4A21","./views/recipeView":"l60JC","./views/searchView":"9OQAM","./views/resultsView":"cSbZE","./views/paginationView":"6z7bi"}],"gkKU3":[function(require,module,exports) {
 exports.interopDefault = function(a) {
     return a && a.__esModule ? a : {
         default: a
@@ -594,13 +600,17 @@ parcelHelpers.export(exports, "loadRecipe", ()=>loadRecipe
 );
 parcelHelpers.export(exports, "loadSearchResults", ()=>loadSearchResults
 );
+parcelHelpers.export(exports, "getSearchResultPage", ()=>getSearchResultPage
+);
 var _configJs = require("./config.js");
 var _helpersJs = require("./helpers.js");
 const state = {
     recipe: {},
     search: {
         query: '',
-        results: []
+        results: [],
+        resultPerPage: _configJs.RESULT_PER_PAGE,
+        page: 1
     }
 };
 const loadRecipe = async function(id) {
@@ -637,6 +647,12 @@ const loadSearchResults = async function(query) {
         throw err;
     }
 };
+const getSearchResultPage = function(page = state.search.page) {
+    state.search.page = page;
+    let start = (page - 1) * state.search.resultPerPage;
+    let end = page * state.search.resultPerPage;
+    return state.search.results.slice(start, end);
+};
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./config.js":"k5Hzs","./helpers.js":"hGI1E"}],"k5Hzs":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -645,8 +661,11 @@ parcelHelpers.export(exports, "API_URL", ()=>API_URL
 );
 parcelHelpers.export(exports, "TIMEOUT_SEC", ()=>TIMEOUT_SEC
 );
+parcelHelpers.export(exports, "RESULT_PER_PAGE", ()=>RESULT_PER_PAGE
+);
 const API_URL = 'https://forkify-api.herokuapp.com/api/v2/recipes/';
 const TIMEOUT_SEC = 10;
+const RESULT_PER_PAGE = 10;
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hGI1E":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -1190,6 +1209,33 @@ class ResultsView extends _viewDefault.default {
 }
 exports.default = new ResultsView();
 
-},{"./View":"5cUXS","../../img/icons.svg":"cMpiy","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["ddCAb","aenu9"], "aenu9", "parcelRequire3a11")
+},{"./View":"5cUXS","../../img/icons.svg":"cMpiy","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"6z7bi":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _view = require("./View");
+var _viewDefault = parcelHelpers.interopDefault(_view);
+var _iconsSvg = require("../../img/icons.svg");
+var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
+var _model = require("../model");
+class PaginationView extends _viewDefault.default {
+    _parentElement = document.querySelector('.pagination');
+    _generateMarkup() {
+        const numPages = Math.ceil(this._data.results.length / this._data.resultPerPage);
+        // scenarios
+        // 1- page 1 and there are other pages
+        if (numPages > 1 && this._data.page === 1) return `page1 and others`;
+        // 3- last page
+        if (numPages === this._data.page && numPages > 1) return `last page`;
+        // 4- other page
+        if (this._data.page < numPages) return `other page`;
+        // 2- page 1 and there is no other pages
+        // if (!numPages || numPages === 1) return `one page only`;
+        // or
+        return `no other pages only one page`;
+    }
+}
+exports.default = new PaginationView();
+
+},{"./View":"5cUXS","../../img/icons.svg":"cMpiy","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../model":"Y4A21"}]},["ddCAb","aenu9"], "aenu9", "parcelRequire3a11")
 
 //# sourceMappingURL=index.e37f48ea.js.map

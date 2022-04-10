@@ -2,11 +2,12 @@ import * as model from './model';
 import recipeView from './views/recipeView';
 import searchView from './views/searchView';
 import resultsView from './views/resultsView';
+import paginationView from './views/paginationView';
 
 ///////////////////////////////////////
-if (module.hot) {
-  module.hot.accept();
-}
+// if (module.hot) {
+//   module.hot.accept();
+// }
 const controlRecipes = async function () {
   try {
     const id = window.location.hash.slice(1);
@@ -27,7 +28,10 @@ const controlSearchResults = async function () {
     if (!query) return;
     searchView.clear();
     await model.loadSearchResults(query);
-    resultsView.render(model.state.search.results);
+    // resultsView.render(model.state.search.results);
+    resultsView.render(model.getSearchResultPage(2));
+
+    paginationView.render(model.state.search);
   } catch (err) {
     throw err;
   }
