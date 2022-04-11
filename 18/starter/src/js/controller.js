@@ -1,8 +1,9 @@
 import * as model from './model';
 import recipeView from './views/recipeView';
 import searchView from './views/searchView';
-import resultsView from './views/resultsView';
 import paginationView from './views/paginationView';
+import resultsView from './views/resultsView';
+import bookMarksView from './views/bookMarksView';
 
 ///////////////////////////////////////
 // if (module.hot) {
@@ -18,6 +19,8 @@ const controlRecipes = async function () {
 
     await model.loadRecipe(id);
     recipeView.render(model.state.recipe);
+
+    bookMarksView.update(model.state.bookMarks);
   } catch (err) {
     recipeView.renderError();
   }
@@ -58,9 +61,16 @@ const controlAddBookmark = function () {
   else model.removeBookmark(model.state.recipe.ID);
 
   recipeView.update(model.state.recipe);
+
+  bookMarksView.render(model.state.bookMarks);
+};
+
+const controlBookmarks = function () {
+  bookMarksView.render(model.state.bookMarks);
 };
 
 const init = function () {
+  bookMarksView.addHandlerBookmark(controlBookmarks);
   recipeView.addHandlerRender(controlRecipes);
   recipeView.addHandlerServings(controlServings);
   recipeView.addHandlerBookmark(controlAddBookmark);
