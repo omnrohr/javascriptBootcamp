@@ -21,7 +21,6 @@ class recipeView extends View {
       const btn = e.target.closest('.btn--update-servings');
       if (!btn) return;
       const servingsCount = +btn.dataset.servings;
-      console.log(servingsCount);
       if (servingsCount > 0) handler(servingsCount);
     });
   }
@@ -30,7 +29,6 @@ class recipeView extends View {
     this._parentElement.addEventListener('click', function (e) {
       const btn = e.target.closest('.btn--bookmark');
       if (!btn) return;
-      console.log(btn);
       handler();
     });
   }

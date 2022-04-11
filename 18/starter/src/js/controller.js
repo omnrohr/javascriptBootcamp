@@ -4,6 +4,7 @@ import searchView from './views/searchView';
 import paginationView from './views/paginationView';
 import resultsView from './views/resultsView';
 import bookMarksView from './views/bookMarksView';
+import addRecipeView from './views/addRecipeView';
 
 ///////////////////////////////////////
 // if (module.hot) {
@@ -69,6 +70,10 @@ const controlBookmarks = function () {
   bookMarksView.render(model.state.bookMarks);
 };
 
+const controlAddNewRecipe = function (newRecipe) {
+  console.log('controller new recipe', newRecipe);
+};
+
 const init = function () {
   bookMarksView.addHandlerBookmark(controlBookmarks);
   recipeView.addHandlerRender(controlRecipes);
@@ -76,6 +81,7 @@ const init = function () {
   recipeView.addHandlerBookmark(controlAddBookmark);
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addPaginationClickHandler(pagePagination);
+  addRecipeView._addHandlerSubmit(controlAddNewRecipe);
 };
 
 init();
