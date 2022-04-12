@@ -528,6 +528,7 @@ var _bookMarksView = require("./views/bookMarksView");
 var _bookMarksViewDefault = parcelHelpers.interopDefault(_bookMarksView);
 var _addRecipeView = require("./views/addRecipeView");
 var _addRecipeViewDefault = parcelHelpers.interopDefault(_addRecipeView);
+var _configJs = require("./config.js");
 ///////////////////////////////////////
 // if (module.hot) {
 //   module.hot.accept();
@@ -581,7 +582,13 @@ const controlBookmarks = function() {
 };
 const controlAddNewRecipe = async function(newRecipe) {
     try {
+        _addRecipeViewDefault.default.renderSpinner();
         await _model.uploadData(newRecipe);
+        _recipeViewDefault.default.render(_model.state.recipe);
+        _addRecipeViewDefault.default.renderMessage();
+        setTimeout(function() {
+            _addRecipeViewDefault.default.toggleWindow();
+        }, _configJs.MODEL_CLOSE_SE * 1000);
     } catch (err) {
         _addRecipeViewDefault.default.renderError(err.message);
     }
@@ -597,7 +604,7 @@ const init = function() {
 };
 init();
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./model":"Y4A21","./views/recipeView":"l60JC","./views/searchView":"9OQAM","./views/resultsView":"cSbZE","./views/paginationView":"6z7bi","./views/bookMarksView":"1O019","./views/addRecipeView":"i6DNj"}],"gkKU3":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./model":"Y4A21","./views/recipeView":"l60JC","./views/searchView":"9OQAM","./views/resultsView":"cSbZE","./views/paginationView":"6z7bi","./views/bookMarksView":"1O019","./views/addRecipeView":"i6DNj","./config.js":"k5Hzs"}],"gkKU3":[function(require,module,exports) {
 exports.interopDefault = function(a) {
     return a && a.__esModule ? a : {
         default: a
@@ -660,20 +667,26 @@ const state = {
     },
     bookMarks: []
 };
+const createRecipeObject = function(data) {
+    const { recipe  } = data.data;
+    return {
+        ID: recipe.id,
+        image: recipe.image_url,
+        ingredients: recipe.ingredients,
+        publisher: recipe.publisher,
+        servings: recipe.servings,
+        sourceUrl: recipe.source_url,
+        title: recipe.title,
+        cookingTime: recipe.cooking_time,
+        ...recipe.key && {
+            key: recipe.key
+        }
+    };
+};
 const loadRecipe = async function(id) {
     try {
         const data = await _helpersJs.getJSON(`${_configJs.API_URL}${id}`);
-        const { recipe  } = data.data;
-        state.recipe = {
-            ID: recipe.id,
-            image: recipe.image_url,
-            ingredients: recipe.ingredients,
-            publisher: recipe.publisher,
-            servings: recipe.servings,
-            sourceUrl: recipe.source_url,
-            title: recipe.title,
-            cookingTime: recipe.cooking_time
-        };
+        state.recipe = createRecipeObject(data);
         if (state.bookMarks.some((bookMarked)=>bookMarked.ID === id
         )) state.recipe.bookMarked = true;
         else state.recipe.bookMarked = false;
@@ -754,7 +767,8 @@ const uploadData = async function(newRecipe) {
         };
         const url = `${_configJs.API_URL}?key=${_configJs.KEY}`;
         const data = await _helpersJs.sendJSON(url, recipe);
-        console.log(data);
+        state.recipe = createRecipeObject(data);
+        addBookmark(data);
     } catch (err) {
         throw err;
     }
@@ -771,10 +785,13 @@ parcelHelpers.export(exports, "RESULT_PER_PAGE", ()=>RESULT_PER_PAGE
 );
 parcelHelpers.export(exports, "KEY", ()=>KEY
 );
+parcelHelpers.export(exports, "MODEL_CLOSE_SE", ()=>MODEL_CLOSE_SE
+);
 const API_URL = 'https://forkify-api.herokuapp.com/api/v2/recipes/';
 const TIMEOUT_SEC = 10;
 const RESULT_PER_PAGE = 10;
 const KEY = '4b96c40c-52f6-4159-a59c-7da486206feb';
+const MODEL_CLOSE_SE = 2.5;
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hGI1E":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -1268,7 +1285,7 @@ class View {
             // Updates changed TEXT
             if (!newEl.isEqualNode(curEl) && newEl.firstChild?.nodeValue.trim() !== '') // console.log('💥', newEl.firstChild.nodeValue.trim());
             curEl.textContent = newEl.textContent;
-            // Updates changed ATTRIBUES
+            // Updates changed ATTRIBUTES
             if (!newEl.isEqualNode(curEl)) Array.from(newEl.attributes).forEach((attr)=>curEl.setAttribute(attr.name, attr.value)
             );
         });
@@ -1486,6 +1503,7 @@ class AddRecipeView extends _viewDefault.default {
     _overlay = document.querySelector('.overlay');
     _btnOpen = document.querySelector('.nav__btn--add-recipe');
     _btnClose = document.querySelector('.btn--close-modal');
+    _successMessage = 'Recipe was successfully loaded.';
     constructor(){
         super();
         this._addHandlerShowWindow();
