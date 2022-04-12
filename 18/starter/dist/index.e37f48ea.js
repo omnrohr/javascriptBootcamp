@@ -579,8 +579,12 @@ const controlAddBookmark = function() {
 const controlBookmarks = function() {
     _bookMarksViewDefault.default.render(_model.state.bookMarks);
 };
-const controlAddNewRecipe = function(newRecipe) {
-    console.log('controller new recipe', newRecipe);
+const controlAddNewRecipe = async function(newRecipe) {
+    try {
+        await _model.uploadData(newRecipe);
+    } catch (err) {
+        _addRecipeViewDefault.default.renderError(err.message);
+    }
 };
 const init = function() {
     _bookMarksViewDefault.default.addHandlerBookmark(controlBookmarks);
@@ -641,6 +645,8 @@ parcelHelpers.export(exports, "persistBookmarks", ()=>persistBookmarks
 parcelHelpers.export(exports, "addBookmark", ()=>addBookmark
 );
 parcelHelpers.export(exports, "removeBookmark", ()=>removeBookmark
+);
+parcelHelpers.export(exports, "uploadData", ()=>uploadData
 );
 var _configJs = require("./config.js");
 var _helpersJs = require("./helpers.js");
@@ -724,6 +730,35 @@ const init = function() {
     if (storage) state.bookMarks = JSON.parse(storage);
 };
 init();
+const uploadData = async function(newRecipe) {
+    try {
+        const ingredients = Object.entries(newRecipe).filter((ing)=>ing[0].startsWith('ingredient') && ing[1] !== ''
+        ).map((ing)=>{
+            const ingArray = ing[1].replaceAll(' ', '').split(',');
+            if (ingArray.length !== 3) throw new Error('Wrong ingredients format, please use the correct format!');
+            const [quantity, unit, description] = ingArray;
+            return {
+                quantity: quantity ? +quantity : null,
+                unit,
+                description
+            };
+        });
+        const recipe = {
+            cooking_time: +newRecipe.cookingTime,
+            image_url: newRecipe.image,
+            servings: +newRecipe.servings,
+            title: newRecipe.title,
+            source_url: newRecipe.sourceUrl,
+            publisher: newRecipe.publisher,
+            ingredients
+        };
+        const url = `${_configJs.API_URL}?key=${_configJs.KEY}`;
+        const data = await _helpersJs.sendJSON(url, recipe);
+        console.log(data);
+    } catch (err) {
+        throw err;
+    }
+};
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./config.js":"k5Hzs","./helpers.js":"hGI1E"}],"k5Hzs":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -734,14 +769,19 @@ parcelHelpers.export(exports, "TIMEOUT_SEC", ()=>TIMEOUT_SEC
 );
 parcelHelpers.export(exports, "RESULT_PER_PAGE", ()=>RESULT_PER_PAGE
 );
+parcelHelpers.export(exports, "KEY", ()=>KEY
+);
 const API_URL = 'https://forkify-api.herokuapp.com/api/v2/recipes/';
 const TIMEOUT_SEC = 10;
 const RESULT_PER_PAGE = 10;
+const KEY = '4b96c40c-52f6-4159-a59c-7da486206feb';
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hGI1E":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "getJSON", ()=>getJSON
+);
+parcelHelpers.export(exports, "sendJSON", ()=>sendJSON
 );
 var _config = require("./config");
 const timeout = function(s) {
@@ -754,7 +794,27 @@ const timeout = function(s) {
 const getJSON = async function(url) {
     try {
         const res = await Promise.race([
-            fetch(`${url}`),
+            fetch(url),
+            timeout(_config.TIMEOUT_SEC)
+        ]);
+        const data = await res.json();
+        if (!res.ok) throw new Error(`${data.message} ${res.status}`);
+        return data;
+    } catch (err) {
+        throw err;
+    }
+};
+const sendJSON = async function(url, newRecipe) {
+    try {
+        const fetchPro = fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newRecipe)
+        });
+        const res = await Promise.race([
+            fetchPro,
             timeout(_config.TIMEOUT_SEC)
         ]);
         const data = await res.json();

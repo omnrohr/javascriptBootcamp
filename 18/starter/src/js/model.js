@@ -1,5 +1,5 @@
-import { API_URL, RESULT_PER_PAGE } from './config.js';
-import { getJSON } from './helpers.js';
+import { API_URL, RESULT_PER_PAGE, KEY } from './config.js';
+import { getJSON, sendJSON } from './helpers.js';
 
 export const state = {
   recipe: {},
@@ -92,3 +92,33 @@ const init = function () {
   }
 };
 init();
+
+export const uploadData = async function (newRecipe) {
+  try {
+    const ingredients = Object.entries(newRecipe)
+      .filter(ing => ing[0].startsWith('ingredient') && ing[1] !== '')
+      .map(ing => {
+        const ingArray = ing[1].replaceAll(' ', '').split(',');
+        if (ingArray.length !== 3)
+          throw new Error(
+            'Wrong ingredients format, please use the correct format!'
+          );
+        const [quantity, unit, description] = ingArray;
+        return { quantity: quantity ? +quantity : null, unit, description };
+      });
+    const recipe = {
+      cooking_time: +newRecipe.cookingTime,
+      image_url: newRecipe.image,
+      servings: +newRecipe.servings,
+      title: newRecipe.title,
+      source_url: newRecipe.sourceUrl,
+      publisher: newRecipe.publisher,
+      ingredients,
+    };
+    const url = `${API_URL}?key=${KEY}`;
+    const data = await sendJSON(url, recipe);
+    console.log(data);
+  } catch (err) {
+    throw err;
+  }
+};

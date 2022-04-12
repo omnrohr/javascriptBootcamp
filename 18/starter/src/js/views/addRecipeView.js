@@ -1,6 +1,6 @@
 import View from './View';
 import icons from '../../img/icons.svg';
-import { state } from '../model';
+import { state, uploadData } from '../model';
 
 class AddRecipeView extends View {
   _parentElement = document.querySelector('.upload');
